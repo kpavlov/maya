@@ -3,6 +3,7 @@ package com.github.kpavlov.maya
 import com.github.kpavlov.maya.sqs.LocalSqs
 import com.github.kpavlov.maya.sqs.SqsMessageSender
 import kotlinx.coroutines.runBlocking
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -41,6 +42,7 @@ class SqsTest {
     @Test
     fun `should run SQS`() = runBlocking {
         println("Running SQS. Listening to ${sqs.endpointUrl()}")
-        sender.sendMessage("Hello, World!")
+        val messageId = sender.sendMessage("Hello, World!")
+        assertThat(messageId).isNotBlank
     }
 }
