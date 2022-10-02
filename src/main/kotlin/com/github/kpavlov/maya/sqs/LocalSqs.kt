@@ -25,7 +25,7 @@ class LocalSqs(
         .withLogConsumer(Slf4jLogConsumer(logger))
         .withFileSystemBind(
             Thread.currentThread().contextClassLoader.getResource(configPath)?.path,
-            "/opt/elastix1cmq.conf",
+            "/opt/elasticmq.conf",
             BindMode.READ_ONLY
         )
 

@@ -32,10 +32,13 @@ dependencies {
     val slf4jVersion = "2.0.3"
     val testconteinersVersion = "1.17.4"
     val junitJupiterVersion = "5.9.1"
+    val awsSdkVersion = "2.17.285"
 
+    api("software.amazon.awssdk:sqs:$awsSdkVersion")
+    api("org.slf4j:slf4j-api:$slf4jVersion")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.testcontainers:testcontainers:$testconteinersVersion")
-    api("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4")
     testImplementation(kotlin("test-junit5"))
     testImplementation("org.assertj:assertj-core:3.22.0")
     testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
