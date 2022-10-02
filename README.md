@@ -1,5 +1,7 @@
 # Maya
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.kpavlov.maya/maya.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.kpavlov.maya%22%20AND%20a:%22maya%22)
+
 _Maya_ (/ˈmɑːjə/, माया), literally "illusion" or "magic". 
 In Vedic texts it connotes a "magic show, an illusion where things
 appear to be present, but are not what they seem".
