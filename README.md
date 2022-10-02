@@ -42,9 +42,24 @@ it in the test classpath.
 Configuration parameters are described [here](https://github.com/softwaremill/elasticmq#installation-stand-alone).
 
 ```kotlin
+// Create and start local SQS Server
 val sqs = LocalSqs(configPath="sqs-queues.conf")
 sqs.start()
+
+// Create SQS client connected to local SQS server
+val sqsClient = SqsAsyncClient.builder()
+    .endpointOverride(URI.create(sqs.endpointUrl()))
+    .region(Region.US_EAST_1)
+    .build()
+
+// Create SqsMessageSender
+val sender = SqsMessageSender<String>(sqsClient, QUEUE_NAME, identity())
+
+// Send message
+val messageId = sender.sendMessage("Hello, World!")
+
 // run some tests...
+
 sqs.stop()
 ```
 
