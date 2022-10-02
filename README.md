@@ -32,6 +32,8 @@ Maven:
 [LocalSqs](src/main/kotlin/com/github/kpavlov/maya/sqs/LocalSqs.kt)
 starts local SQS server using [ElasticMQ](https://github.com/softwaremill/elasticmq) 
 Docker [container](https://hub.docker.com/r/softwaremill/elasticmq-native/).
+   
+Make sure that docker daemon is running on your machine.
 
 It can be customized by creating configuration file and storing 
 it in the test classpath.
@@ -43,3 +45,6 @@ sqs.start()
 // run some tests...
 sqs.stop()
 ```
+
+It is recommended to start SQS server only once before running all tests.
+With JUnit5 you should run it in java static initializer, to make sure it is started before all tests in all classes.
