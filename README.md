@@ -35,6 +35,7 @@ Docker [container](https://hub.docker.com/r/softwaremill/elasticmq-native/).
 
 It can be customized by creating configuration file and storing 
 it in the test classpath.
+Configuration parameters are described [here](https://github.com/softwaremill/elasticmq#installation-stand-alone).
 
 ```kotlin
 val sqs = LocalSqs(configPath="sqs-queues.conf")
