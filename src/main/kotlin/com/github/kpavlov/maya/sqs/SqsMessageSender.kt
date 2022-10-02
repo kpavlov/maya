@@ -19,9 +19,9 @@ class SqsMessageSender<T> internal constructor(
         SqsMessageSender::class.java.simpleName + "[" + queueName + "]"
     )
 
-    suspend fun sendMessage(message: T) {
+    suspend fun sendMessage(message: T): String {
         val messageBody = encoder.apply(message)
-        sqsClient.getQueueUrl { request: GetQueueUrlRequest.Builder ->
+        return sqsClient.getQueueUrl { request: GetQueueUrlRequest.Builder ->
             request.queueName(
                 queueName
             )
@@ -38,7 +38,7 @@ class SqsMessageSender<T> internal constructor(
             .thenApply { sendMessageResponse ->
                 val messageId = sendMessageResponse.messageId()
                 logger.info("Message sent: messageId={}", messageId)
-                null as Void?
+                messageId
             }.exceptionallyCompose { throwable: Throwable ->
                 logger.error(
                     "Failed to publish a message {} to SQS queue \"{}\"", message,

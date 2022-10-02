@@ -30,7 +30,7 @@ class SqsTest {
             .region(Region.US_EAST_1)
             .build()
 
-        sender = SqsMessageSender<String>(sqsClient, QUEUE_NAME, identity());
+        sender = SqsMessageSender<String>(sqsClient, QUEUE_NAME, identity())
     }
 
     @AfterAll
