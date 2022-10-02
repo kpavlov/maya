@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -56,6 +57,11 @@ java {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events = setOf(
+            TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED
+        )
+    }
 }
 
 tasks.withType<KotlinCompile> {
@@ -117,4 +123,9 @@ publishing {
             url = uri(layout.buildDirectory.dir("repo"))
         }
     }
+}
+
+signing {
+    // https://docs.gradle.org/current/userguide/signing_plugin.html#sec:signatory_credentials
+    sign(publishing.publications["maven"])
 }
