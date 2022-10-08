@@ -31,7 +31,7 @@ nexusPublishing {
 
 dependencies {
     val slf4jVersion = "2.0.3"
-    val testcontainersVersion = "1.17.4"
+    val testcontainersVersion = "1.17.5"
     val junitJupiterVersion = "5.9.1"
     val awsSdkVersion = "2.17.289"
     ext["junit-jupiter.version"] = junitJupiterVersion
