@@ -74,7 +74,14 @@ kotlin {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    with(kotlinOptions) {
+        jvmTarget = "17"
+        freeCompilerArgs = listOf(
+            "-Xjsr305=strict",
+            "-Xstring-concat=indy-with-constants",
+            "-progressive",
+        )
+    }
 }
 
 ktlint {
