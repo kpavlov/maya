@@ -31,17 +31,18 @@ nexusPublishing {
 
 dependencies {
     val slf4jVersion = "2.0.3"
-    val testconteinersVersion = "1.17.4"
+    val testcontainersVersion = "1.17.4"
     val junitJupiterVersion = "5.9.1"
-    val awsSdkVersion = "2.17.285"
+    val awsSdkVersion = "2.17.289"
+    ext["junit-jupiter.version"] = junitJupiterVersion
 
     api("software.amazon.awssdk:sqs:$awsSdkVersion")
     api("org.slf4j:slf4j-api:$slf4jVersion")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    implementation("org.testcontainers:testcontainers:$testconteinersVersion")
+    implementation("org.testcontainers:testcontainers:$testcontainersVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4")
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.assertj:assertj-core:3.22.0")
+    testImplementation("org.assertj:assertj-core:3.23.1")
     testRuntimeOnly("org.slf4j:slf4j-simple:$slf4jVersion")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
 }

@@ -1,6 +1,5 @@
 package com.github.kpavlov.maya.sqs
 
-import kotlinx.coroutines.future.await
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import software.amazon.awssdk.services.sqs.SqsAsyncClient
@@ -8,29 +7,53 @@ import software.amazon.awssdk.services.sqs.model.GetQueueUrlRequest
 import software.amazon.awssdk.services.sqs.model.GetQueueUrlResponse
 import software.amazon.awssdk.services.sqs.model.SendMessageRequest
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletionStage
 import java.util.function.Function
 
-class SqsMessageSender<T> internal constructor(
+open class SqsMessageSender<T> constructor(
     private val sqsClient: SqsAsyncClient,
     private val queueName: String,
-    private val encoder: Function<T, String>
+    private val messageEncoder: Function<T, String>,
+    private val messageGroupIdExtractor: Function<T, String>? = null,
+    private val messageDeduplicationIdExtractor: Function<T, String>? = null,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(
         SqsMessageSender::class.java.simpleName + "[" + queueName + "]"
     )
 
-    suspend fun sendMessage(message: T): String {
-        val messageBody = encoder.apply(message)
+    open fun sendMessageAsync(
+        message: T
+    ) = sendMessageAsync(
+        message = message,
+        messageGroupIdExtractor = messageGroupIdExtractor,
+        messageDeduplicationIdExtractor = messageDeduplicationIdExtractor
+    )
+
+    open fun sendMessageAsync(
+        message: T,
+        messageGroupIdExtractor: Function<T, String>? = null,
+        messageDeduplicationIdExtractor: Function<T, String>? = null,
+    ): CompletionStage<String> {
+        val messageBody = messageEncoder.apply(message)
         return sqsClient.getQueueUrl { request: GetQueueUrlRequest.Builder ->
             request.queueName(
                 queueName
             )
         }
             .thenApply { getQueueUrlResponse: GetQueueUrlResponse ->
-                SendMessageRequest.builder()
+                val requestBuilder = SendMessageRequest.builder()
                     .queueUrl(getQueueUrlResponse.queueUrl())
                     .messageBody(messageBody)
-                    .build()
+
+                messageGroupIdExtractor?.let {
+                    requestBuilder.messageGroupId(it.apply(message))
+                }
+
+                messageDeduplicationIdExtractor?.let {
+                    requestBuilder.messageDeduplicationId(it.apply(message))
+                }
+
+                requestBuilder.build()
             }
             .thenCompose { sendMessageRequest ->
                 sqsClient.sendMessage(sendMessageRequest)
@@ -45,6 +68,6 @@ class SqsMessageSender<T> internal constructor(
                     queueName
                 )
                 CompletableFuture.failedStage(throwable)
-            }.await()
+            }
     }
 }

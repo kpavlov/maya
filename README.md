@@ -9,6 +9,12 @@ appear to be present, but are not what they seem".
 This project provides classes for easier integration testing, 
 simulating external environment.
 
+## features
+
+* SQS emulator
+  * Standard and FIFO queues support
+  * [SqsMessageSender](src/main/kotlin/com/github/kpavlov/maya/sqs/SqsMessageSender.kt) for publishing messages from tests.
+
 ## Installation
 
 Add a dependency to your project.
@@ -52,11 +58,27 @@ val sqsClient = SqsAsyncClient.builder()
     .region(Region.US_EAST_1)
     .build()
 
-// Create SqsMessageSender
-val sender = SqsMessageSender<String>(sqsClient, QUEUE_NAME, identity())
+// Create SqsMessageSender for Standard SQS Queue
+val sender = SqsMessageSender<String>(
+    sqsClient, 
+    queueName = "test-queue",
+    messageEncoder = identity()
+)
 
-// Send message
-val messageId = sender.sendMessage("Hello, World!")
+// Send message to Standard queue
+val messageId = sender.sendMessageAsync("Hello, World!").await()
+
+// Create SqsMessageSender for Standard SQS Queue
+val fifoSender = SqsMessageSender<String>(
+    sqsClient,
+    queueName = "test-queue.fifo",
+    messageEncoder = Function.identity() ,
+    messageGroupIdExtractor = { it.substring(0, 5) },
+    messageDeduplicationIdExtractor = { it.hashCode().toString() }
+)
+
+// Send message to FIFO queue
+val messageId = fifoSender.sendMessageAsync("Hello, FIFO World!").await()
 
 // run some tests...
 
