@@ -69,6 +69,10 @@ tasks.test {
     }
 }
 
+kotlin {
+    explicitApi()
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }

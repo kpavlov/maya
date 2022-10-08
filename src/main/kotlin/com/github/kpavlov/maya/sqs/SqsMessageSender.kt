@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.CompletionStage
 import java.util.function.Function
 
-open class SqsMessageSender<T> constructor(
+public open class SqsMessageSender<T> constructor(
     private val sqsClient: SqsAsyncClient,
     private val queueName: String,
     private val messageEncoder: Function<T, String>,
@@ -21,15 +21,15 @@ open class SqsMessageSender<T> constructor(
         SqsMessageSender::class.java.simpleName + "[" + queueName + "]"
     )
 
-    open fun sendMessageAsync(
+    public open fun sendMessageAsync(
         message: T
-    ) = sendMessageAsync(
+    ): CompletionStage<String> = sendMessageAsync(
         message = message,
         messageGroupIdExtractor = messageGroupIdExtractor,
         messageDeduplicationIdExtractor = messageDeduplicationIdExtractor
     )
 
-    open fun sendMessageAsync(
+    public open fun sendMessageAsync(
         message: T,
         messageGroupIdExtractor: Function<T, String>? = null,
         messageDeduplicationIdExtractor: Function<T, String>? = null,

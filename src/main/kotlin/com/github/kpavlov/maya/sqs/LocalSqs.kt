@@ -11,12 +11,13 @@ import org.testcontainers.utility.DockerImageName
  * https://github.com/softwaremill/elasticmq
  * https://www.testcontainers.org/features/creating_container/
  */
-class LocalSqs(
+public class LocalSqs(
     configPath: String = "sqs-queues.conf"
 ) {
 
     private val logger = LoggerFactory.getLogger(LocalSqs::class.java)
 
+    @Suppress("SpellCheckingInspection")
     private val container = GenericContainer(
         DockerImageName.parse("softwaremill/elasticmq-native")
     )
@@ -29,18 +30,18 @@ class LocalSqs(
             BindMode.READ_ONLY
         )
 
-    fun start() {
+    public fun start() {
         logger.info("Starting SQS Server...")
         container.start()
         logger.info("SQS Server started.")
     }
 
     @Suppress("HttpUrlsUsage")
-    fun endpointUrl(): String {
+    public fun endpointUrl(): String {
         return "http://${container.host}:${container.getMappedPort(9324)}"
     }
 
-    fun stop() {
+    public fun stop() {
         logger.info("Stopping SQS Server...")
         container.stop()
         logger.info("SQS Server stopped.")
